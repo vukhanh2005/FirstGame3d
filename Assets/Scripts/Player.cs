@@ -4,15 +4,22 @@ using UnityEngine.InputSystem;
 
 public class Player : MonoBehaviour
 {
+    [Header("Input Action")]
     InputAction moveAction;
     InputAction jumpAction;
+    InputAction attackAction;
     Vector2 moveInput;
-    Rigidbody rb;
-    Animator anim;
+    
+    [Header("SPEED")]
     public float speedWalk;
     public float speedRun;
     public float speedRotate;
+    [Header("COMPONENT")]
+    Rigidbody rb;
+    Animator anim;
+    [Header("STATE")]
     public PlayerState currentPlayerState;
+    public AttackType attackType;
     public enum PlayerState
     {
         Walking,
@@ -24,11 +31,22 @@ public class Player : MonoBehaviour
         FreeTime,
         Stunning
     }
+    public enum AttackType
+    {
+        Melee,
+        Gun,
+        Archer,
+        Hand
+    }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        //Init first value
         currentPlayerState = PlayerState.Idle;
+        //Get input
         moveAction = InputSystem.actions.FindAction("Move");
+        attackAction = InputSystem.actions.FindAction("Attack");
+        //Get component
         rb = GetComponent<Rigidbody>();
         anim = GetComponent<Animator>();
     }
@@ -36,15 +54,17 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!CursorController.isLocked)
+        {
+            return;
+        }
         ControlAnimation();
         if (currentPlayerState != PlayerState.Stunning)
         {
             ChangeCurrentPlayerState(PlayerState.Walking);
             Move();
         }
-        Debug.Log(moveInput.x + "-" + moveInput.y);
     }
-    
     void Move()
     {
         moveInput = moveAction.ReadValue<Vector2>();
