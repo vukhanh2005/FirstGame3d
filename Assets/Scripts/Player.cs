@@ -69,9 +69,21 @@ public class Player : MonoBehaviour
     {
         moveInput = moveAction.ReadValue<Vector2>();
 
+        // Hướng của camera (chỉ dùng trục XZ)
+        Vector3 camForward = Camera.main.transform.forward;
+        camForward.y = 0;
+        camForward.Normalize();
+
+        Vector3 camRight = Camera.main.transform.right;
+        camRight.y = 0;
+        camRight.Normalize();
+
+        // Tính hướng di chuyển theo camera
+        Vector3 moveDirection = camForward * moveInput.y + camRight * moveInput.x;
+
         // Di chuyển
-        Vector3 moveDirection = new Vector3(moveInput.x, 0, moveInput.y);
-        rb.linearVelocity = moveDirection.normalized * speedWalk + new Vector3(0, rb.linearVelocity.y, 0);
+        rb.linearVelocity = new Vector3(moveDirection.normalized.x * speedWalk, rb.linearVelocity.y, moveDirection.normalized.z * speedWalk);
+
 
         // Xoay theo hướng di chuyển
         if (moveDirection != Vector3.zero)
@@ -80,7 +92,7 @@ public class Player : MonoBehaviour
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, speedRotate * Time.deltaTime);
         }
 
-        // Trạng thái
+        // Đổi trạng thái
         if (moveInput == Vector2.zero)
         {
             ChangeCurrentPlayerState(PlayerState.Idle);
@@ -90,6 +102,7 @@ public class Player : MonoBehaviour
             ChangeCurrentPlayerState(PlayerState.Walking);
         }
     }
+
 
     void ChangeCurrentPlayerState(PlayerState state)
     {

@@ -9,6 +9,15 @@
       },
       "hash": "38fecf55e4fd94ccfe58a92ed8ad1a529ba1694e"
     },
+    "com.huynguyen03dev.ide.kiro": {
+      "version": "https://github.com/huynguyen03dev/com.unity.ide.kiro.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.unity.test-framework": "1.1.9"
+      },
+      "hash": "6d7debf52c67f2a8e830500aa0e500ba2510d5bf"
+    },
     "com.siccity.gltfutility": {
       "version": "https://github.com/Siccity/GLTFUtility.git",
       "depth": 0,
